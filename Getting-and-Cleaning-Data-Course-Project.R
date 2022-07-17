@@ -18,16 +18,19 @@ for (feature in  features) {print(feature)}
 colnames(complete) <- c("id", "activity", feature)
 cn <- colnames(complete)
 
-mean <- grep("mean()", cn[1:563])
+m <- grep("mean()", cn[1:563])
 std <- grep("std()", cn[1:563])
-filtered_cs <- sort(c(mean, std))
+filtered_cs <- sort(c(m, std))
 complete <- complete[ , c(1, 2, filtered_cs)]
 
 complete[ , 2] <- ifelse(complete$activity == 1, "Walking", ifelse(complete$activity == 2, "Walking_Upstairs", ifelse(complete$activity == 3, "Walking_Downstairs", ifelse(complete$activity == 4, "Sitting", ifelse(complete$activity == 5, "Standing", "Laying")))))
 first_dataset <- complete
 View(first_dataset)
 
-variables
-first_dataset %>%
-  group_by(id, activity) %>%
-  summarise_all(.funs = mean)
+variables <- colnames(first_dataset)[3:81]
+second_dataset <- 
+  first_dataset %>%
+    group_by(id, activity) %>%
+    summarise_all(.funs = mean)
+View(second_dataset)
+write.table(x = second_dataset, file = "tidy_dataset.txt", row.names = FALSE)
